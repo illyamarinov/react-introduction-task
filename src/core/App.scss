@@ -4,9 +4,17 @@
   &-header {
     background-color: #282c34;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     color: white;
+    padding: 0 30px;
+  }
+
+  &-content {
+    padding: 20px 0;
+  }
+
+  .item {
+    padding: 10px; 
   }
 }
