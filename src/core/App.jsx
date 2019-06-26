@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
+import List from 'components/list';
 
 import getData from 'services/get-data';
 import { RESOURCES } from 'constants/settings';
@@ -13,17 +14,31 @@ class App extends Component {
       list: [],
       chunks: [],
     }
-
     this.itemCounter = 20;
     this.isCompleted = false;
   }
 
   componentDidMount() {
     getData(RESOURCES.PHOTOS).then((response) => {
+      response.forEach((item) => item.favorite = false);
       this.isCompleted = true;
       this.setState({
         list: response,
-      })
+      });
+    });
+  }
+
+  setFavorite = (item) => {
+    const { chunks } = this.state;
+
+    if (chunks[item].favorite) {
+      chunks[item].favorite = false;
+    } else {
+      chunks[item].favorite = true;
+    }
+
+    this.setState({
+      chunks: chunks
     });
   }
 
@@ -52,11 +67,7 @@ class App extends Component {
           loader={<div className="loader" key={0}>Loading ...</div>}
         >
           <div className="app-content">
-            {this.state.chunks.map((item, index) => (
-              <div className="item" key={index}>
-                div - #{index}
-              </div>
-            ))}
+            <List listItems={this.state.chunks} onClick={this.setFavorite} />
           </div>
         </InfiniteScroll>
       </div>
