@@ -1,46 +1,47 @@
 import React, { Component } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 
-import getData from '../services/get-data';
-import { RESOURCES } from '../constants/settings';
+import getData from 'services/get-data';
+import { RESOURCES } from 'constants/settings';
 
-import './App.scss';
+import './app.scss';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       list: [],
-      chanks: [],
-      itemCounter: 20,
+      chunks: [],
     }
 
-    this.getMoreData = this.getMoreData.bind(this);
+    this.itemCounter = 20;
+    this.isCompleted = false;
   }
 
   componentDidMount() {
     getData(RESOURCES.PHOTOS).then((response) => {
+      this.isCompleted = true;
       this.setState({
         list: response,
       })
     });
   }
 
-  getMoreData() {
-    console.log('getMoreData');
-    const chanksLength = this.state.chanks.length;
-
-    setTimeout(() => {
-      this.setState({
-        chanks: this.state.chanks.concat(this.state.list.slice(chanksLength, chanksLength + this.state.itemCounter)),
-      });
-    }, 2000);
+  getMoreData = () => {
+    const { list, chunks } = this.state;
+    if (this.isCompleted) {
+      setTimeout(() => {
+        this.setState({
+          chunks: chunks.concat(list.slice(chunks.length, chunks.length + this.itemCounter)),
+        });
+      }, 1500);
+    }
   };
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
+      <div className="app">
+        <header className="app-header">
           <h1>items list</h1>
         </header>
         <InfiniteScroll
@@ -50,8 +51,8 @@ class App extends Component {
           hasMore={true}
           loader={<div className="loader" key={0}>Loading ...</div>}
         >
-          <div className="App-content">
-            {this.state.chanks.map((item, index) => (
+          <div className="app-content">
+            {this.state.chunks.map((item, index) => (
               <div className="item" key={index}>
                 div - #{index}
               </div>
