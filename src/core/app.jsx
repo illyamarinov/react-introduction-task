@@ -3,6 +3,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import List from 'components/list';
 
 import getData from 'services/get-data';
+import sortChunks from 'utils/sort-chunks';
 import { RESOURCES } from 'constants/settings';
 
 import './app.scss';
@@ -29,31 +30,42 @@ class App extends Component {
         list: response,
       });
     });
+
+    document.addEventListener("keydown", this.onKeyPressed);
   }
 
-  sortItems = (chunks, query) => {
-    switch (query) {
-      case "favorite":
-        chunks.sort((first, second) => {
-          return (first.favorite === second.favorite) ? 0 : first.favorite ? -1 : 1;
-        });
-        break;
-      default:
-        chunks.sort((first, second) => {
-          return first.id - second.id;
-        });
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.onKeyPressed);
+  }
+
+  onKeyPressed = (e) => {
+    if (e.keyCode === 27) {
+      this.unselectAll();
     }
+  }
+
+  unselectAll = () => {
+    const { chunks } = this.state;
+
+    chunks.forEach((item) => {
+      item.selected = false;
+    });
+
+    this.setState({
+      chunks: chunks
+    });
   }
 
   setFavorite = (item) => {
     const { chunks } = this.state;
+
     if (chunks[item].favorite) {
       chunks[item].favorite = false;
-      this.sortItems(chunks);
     } else {
       chunks[item].favorite = true;
     }
-    this.sortItems(chunks, 'favorite');
+
+    sortChunks(chunks);
     this.setState({
       chunks: chunks
     });
@@ -69,6 +81,7 @@ class App extends Component {
 
   getMoreData = () => {
     const { list, chunks } = this.state;
+
     if (this.isCompleted) {
       setTimeout(() => {
         this.setState({
@@ -81,9 +94,11 @@ class App extends Component {
   render() {
     return (
       <div className="app">
+
         <header className="app-header">
           <h1>React Introduction Task</h1>
         </header>
+
         <InfiniteScroll
           pageStart={0}
           loadMore={this.getMoreData}
@@ -92,9 +107,16 @@ class App extends Component {
           loader={<div className="loader" key={0}>Loading ...</div>}
         >
           <div className="app-content">
-            <List listItems={this.state.chunks} selectItem={this.selectItem} setFavorite={this.setFavorite}/>
+
+            <List
+              listItems={this.state.chunks}
+              selectItem={this.selectItem}
+              setFavorite={this.setFavorite}
+            />
+
           </div>
         </InfiniteScroll>
+
       </div>
     );
   }
