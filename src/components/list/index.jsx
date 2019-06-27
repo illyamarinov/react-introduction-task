@@ -4,7 +4,7 @@ import ListItem from 'components/list-item';
 
 import './index.scss';
 
-const List = ({listItems, onClick}) => {
+const List = ({listItems, setFavorite, selectItem}) => {
   return (
     <ul className="list">
       {listItems.map((item, index) => {
@@ -12,7 +12,8 @@ const List = ({listItems, onClick}) => {
           <ListItem
             key={item.id}
             index={index}
-            onClick={onClick}
+            setFavorite={setFavorite}
+            selectItem={selectItem}
             {...item}
           />
         )

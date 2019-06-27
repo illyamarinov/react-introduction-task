@@ -20,7 +20,10 @@ class App extends Component {
 
   componentDidMount() {
     getData(RESOURCES.PHOTOS).then((response) => {
-      response.forEach((item) => item.favorite = false);
+      response.forEach((item) => {
+        item.selected = false;
+        item.favorite = false;
+      });
       this.isCompleted = true;
       this.setState({
         list: response,
@@ -28,15 +31,37 @@ class App extends Component {
     });
   }
 
+  sortItems = (chunks, query) => {
+    switch (query) {
+      case "favorite":
+        chunks.sort((first, second) => {
+          return (first.favorite === second.favorite) ? 0 : first.favorite ? -1 : 1;
+        });
+        break;
+      default:
+        chunks.sort((first, second) => {
+          return first.id - second.id;
+        });
+    }
+  }
+
   setFavorite = (item) => {
     const { chunks } = this.state;
-
     if (chunks[item].favorite) {
       chunks[item].favorite = false;
+      this.sortItems(chunks);
     } else {
       chunks[item].favorite = true;
     }
+    this.sortItems(chunks, 'favorite');
+    this.setState({
+      chunks: chunks
+    });
+  }
 
+  selectItem = (item) => {
+    const { chunks } = this.state;
+    chunks[item].selected = !chunks[item].selected;
     this.setState({
       chunks: chunks
     });
@@ -57,17 +82,17 @@ class App extends Component {
     return (
       <div className="app">
         <header className="app-header">
-          <h1>items list</h1>
+          <h1>React Introduction Task</h1>
         </header>
         <InfiniteScroll
           pageStart={0}
           loadMore={this.getMoreData}
-          threshold={1}
+          threshold={10}
           hasMore={true}
           loader={<div className="loader" key={0}>Loading ...</div>}
         >
           <div className="app-content">
-            <List listItems={this.state.chunks} onClick={this.setFavorite} />
+            <List listItems={this.state.chunks} selectItem={this.selectItem} setFavorite={this.setFavorite}/>
           </div>
         </InfiniteScroll>
       </div>

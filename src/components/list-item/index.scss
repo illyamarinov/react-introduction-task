@@ -1,26 +1,24 @@
 .list-item {
+  display: flex;
+  justify-content: flex-start;
   padding: 10px;
+  background: #f3f3f3;
+  margin: 20px 0;
+  cursor: pointer;
 
   &-label {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
     cursor: pointer;
-    background: #f3f3f3;
     padding: 1rem;
   }
 
   &-button {
-    visibility: hidden;
+    display: none;
   }
 
   &-content {
-    margin-left: 50px;
   }
 }
 
 .selected {
-  .list-item-label {
-    background: #c8c8c8;
-  }
+  background: #c8c8c8;
 }

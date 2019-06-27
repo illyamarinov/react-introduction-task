@@ -1,4 +1,4 @@
-const APIURL = 'https://jsonplaceholder.typicode.com/';
+const API_URL = 'https://jsonplaceholder.typicode.com/';
 
 const RESOURCES = {
   POSTS: 'posts',
@@ -9,4 +9,4 @@ const RESOURCES = {
   USERS: 'users',
 }
 
-export { RESOURCES, APIURL };
+export { RESOURCES, API_URL };

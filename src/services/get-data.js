@@ -1,7 +1,7 @@
-import { APIURL } from 'constants/settings';
+import { API_URL } from 'constants/settings';
 
 const getData = (resource = 'users') => {
-  return fetch(`${APIURL}${resource}`)
+  return fetch(`${API_URL}${resource}`)
     .then(response => response.json());
 };
 
