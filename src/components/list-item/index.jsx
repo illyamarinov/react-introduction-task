@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Icon from '@material-ui/core/Icon';
 
@@ -18,33 +19,43 @@ const ListItem = ({title, id, index, favorite, selected, setFavorite, selectItem
 
   return (
     <li
-      className={`list-item${selected ? ' selected' : ''}`}
+      className={`list__item${selected ? ' list__item_selected' : ''}`}
       onClick={handleSelect}
     >
       <label
-        className="list-item-label"
+        className="list__item-label"
         htmlFor={`input-${id}`}
         onClick={handleFavorite}
       >
         {
           favorite ?
-          <Icon>star</Icon> :
-          <Icon>star_border</Icon>
+          <Icon className="list__item-icon_full">star</Icon> :
+          <Icon className="list__item-icon_outline">star_border</Icon>
         }
       </label>
 
       <input
-        type="checkbox"
+        className="list__item-button"
         id={`input-${id}`}
+        type="checkbox"
         defaultChecked={false}
-        className="list-item-button"
       />
 
-      <p className="list-item-content">
+      <p className="list__item-content">
         {id}. {title}
       </p>
     </li>
   )
+}
+
+ListItem.propTypes = {
+  title: PropTypes.string,
+  id: PropTypes.number,
+  index: PropTypes.number,
+  favorite: PropTypes.bool,
+  selected: PropTypes.bool,
+  setFavorite: PropTypes.func,
+  selectItem: PropTypes.func
 }
 
 export default ListItem;

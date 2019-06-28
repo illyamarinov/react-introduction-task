@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import ListItem from 'components/list-item';
 
@@ -20,6 +21,12 @@ const List = ({listItems, setFavorite, selectItem}) => {
       })}
     </ul>
   )
+}
+
+ListItem.propTypes = {
+  listItems: PropTypes.array,
+  setFavorite: PropTypes.func,
+  selectItem: PropTypes.func
 }
 
 export default List;
