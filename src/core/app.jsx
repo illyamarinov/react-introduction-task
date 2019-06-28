@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 import List from 'components/list';
+import Control from 'components/control';
 
 import getData from 'services/get-data';
 import sortChunks from 'utils/sort-chunks';
@@ -31,17 +32,34 @@ class App extends Component {
       });
     });
 
-    document.addEventListener("keydown", this.onKeyPressed);
+    document.addEventListener("keydown", this.onEscapePressed);
   }
 
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.onKeyPressed);
+    document.removeEventListener("keydown", this.onEscapePressed);
   }
 
-  onKeyPressed = (e) => {
+  onEscapePressed = (e) => {
     if (e.keyCode === 27) {
       this.unselectAll();
     }
+  }
+
+  resetAll = () => {
+    const { chunks } = this.state;
+
+    chunks.forEach((item) => {
+      item.selected = false;
+      item.favorite = false;
+    });
+
+    chunks.sort((first, second) => {
+      return first.id - second.id;
+    })
+
+    this.setState({
+      chunks: chunks
+    });
   }
 
   unselectAll = () => {
@@ -51,6 +69,36 @@ class App extends Component {
       item.selected = false;
     });
 
+    this.setState({
+      chunks: chunks
+    });
+  }
+
+  setSelectedFavorite = () => {
+    const { chunks } = this.state;
+
+    chunks.forEach((item) => {
+      if (item.selected) {
+        item.favorite = true;
+      }
+    })
+    sortChunks(chunks);
+
+    this.setState({
+      chunks: chunks
+    });
+  }
+
+  unsetSelectedFavorite = () => {
+    const { chunks } = this.state;
+
+    chunks.forEach((item) => {
+      if (item.selected && item.favorite) {
+        item.favorite = false;
+      }
+    })
+    sortChunks(chunks);
+    
     this.setState({
       chunks: chunks
     });
@@ -96,7 +144,12 @@ class App extends Component {
       <div className="app">
 
         <header className="app-header">
-          <h1>React Introduction Task</h1>
+          <h1 className="app-header__title">React Introduction Task</h1>
+          <div className="app-navbar">
+            <Control text={'Favorite'} controlType={this.setSelectedFavorite} />
+            <Control text={'Unfavorite'} controlType={this.unsetSelectedFavorite} />
+            <Control text={'Reset'} controlType={this.resetAll} />
+          </div>
         </header>
 
         <InfiniteScroll
