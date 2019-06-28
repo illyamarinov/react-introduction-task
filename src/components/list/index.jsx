@@ -5,28 +5,24 @@ import ListItem from 'components/list-item';
 
 import './index.scss';
 
-const List = ({listItems, setFavorite, selectItem}) => {
-  return (
-    <ul className="list">
-      {listItems.map((item, index) => {
-        return (
-          <ListItem
-            key={item.id}
-            index={index}
-            setFavorite={setFavorite}
-            selectItem={selectItem}
-            {...item}
-          />
-        )
-      })}
-    </ul>
-  )
-}
+const List = ({ listItems, setFavorite, selectItem }) => (
+  <ul className="list">
+    {listItems.map((item, index) => (
+      <ListItem
+        key={item.id}
+        index={index}
+        setFavorite={setFavorite}
+        selectItem={selectItem}
+        {...item}
+      />
+    ))}
+  </ul>
+);
 
-ListItem.propTypes = {
-  listItems: PropTypes.array,
-  setFavorite: PropTypes.func,
-  selectItem: PropTypes.func
-}
+List.propTypes = {
+  listItems: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setFavorite: PropTypes.func.isRequired,
+  selectItem: PropTypes.func.isRequired,
+};
 
 export default List;

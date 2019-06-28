@@ -15,7 +15,7 @@ class App extends Component {
     this.state = {
       list: [],
       chunks: [],
-    }
+    };
     this.itemCounter = 20;
     this.isCompleted = false;
   }
@@ -26,86 +26,86 @@ class App extends Component {
         item.selected = false;
         item.favorite = false;
       });
+
       this.isCompleted = true;
+
       this.setState({
         list: response,
       });
     });
 
-    document.addEventListener("keydown", this.onEscapePressed);
+    document.addEventListener('keydown', this.onEscapePressed);
   }
 
   componentWillUnmount() {
-    document.removeEventListener("keydown", this.onEscapePressed);
+    document.removeEventListener('keydown', this.onEscapePressed);
   }
 
-  onEscapePressed = (e) => {
-    if (e.keyCode === 27) {
+  onEscapePressed = ({ keyCode }) => {
+    if (keyCode === 27) {
       this.unselectAll();
     }
   }
 
   resetAll = () => {
-    const { chunks } = this.state;
+    const chunks = this.state.chunks.slice();
 
     chunks.forEach((item) => {
       item.selected = false;
       item.favorite = false;
     });
 
-    chunks.sort((first, second) => {
-      return first.id - second.id;
-    })
+    chunks.sort((first, second) => first.id - second.id);
 
     this.setState({
-      chunks: chunks
+      chunks,
     });
   }
 
   unselectAll = () => {
-    const { chunks } = this.state;
+    const chunks = this.state.chunks.slice();
 
     chunks.forEach((item) => {
       item.selected = false;
     });
 
     this.setState({
-      chunks: chunks
+      chunks,
     });
   }
 
   setSelectedFavorite = () => {
-    const { chunks } = this.state;
+    const chunks = this.state.chunks.slice();
 
     chunks.forEach((item) => {
       if (item.selected) {
         item.favorite = true;
       }
-    })
+    });
     sortChunks(chunks);
 
     this.setState({
-      chunks: chunks
+      chunks,
     });
   }
 
   unsetSelectedFavorite = () => {
-    const { chunks } = this.state;
+    const chunks = this.state.chunks.slice();
 
     chunks.forEach((item) => {
       if (item.selected && item.favorite) {
         item.favorite = false;
       }
-    })
+    });
     sortChunks(chunks);
-    
+
     this.setState({
-      chunks: chunks
+      chunks,
     });
   }
 
   setFavorite = (item) => {
-    const { chunks } = this.state;
+    const chunks = this.state.chunks.slice();
 
     if (chunks[item].favorite) {
       chunks[item].favorite = false;
@@ -115,15 +115,16 @@ class App extends Component {
 
     sortChunks(chunks);
     this.setState({
-      chunks: chunks
+      chunks,
     });
   }
 
   selectItem = (item) => {
-    const { chunks } = this.state;
+    const chunks = this.state.chunks.slice();
+
     chunks[item].selected = !chunks[item].selected;
     this.setState({
-      chunks: chunks
+      chunks,
     });
   }
 
@@ -146,9 +147,18 @@ class App extends Component {
         <header className="app-header">
           <h1 className="app-header__title">React Introduction Task</h1>
           <div className="app-navbar">
-            <Control text={'Favorite'} controlType={this.setSelectedFavorite} />
-            <Control text={'Unfavorite'} controlType={this.unsetSelectedFavorite} />
-            <Control text={'Reset'} controlType={this.resetAll} />
+            <Control
+              text="Favorite"
+              controlType={this.setSelectedFavorite}
+            />
+            <Control
+              text="Unfavorite"
+              controlType={this.unsetSelectedFavorite}
+            />
+            <Control
+              text="Reset"
+              controlType={this.resetAll}
+            />
           </div>
         </header>
 
@@ -156,7 +166,7 @@ class App extends Component {
           pageStart={0}
           loadMore={this.getMoreData}
           threshold={10}
-          hasMore={true}
+          hasMore
           loader={<div className="loader" key={0}>Loading ...</div>}
         >
           <div className="app-content">

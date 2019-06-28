@@ -9,10 +9,10 @@ import './index.scss';
 const useStyles = makeStyles(theme => ({
   button: {
     margin: theme.spacing(5),
-  }
+  },
 }));
 
-const Control = ({controlType, text}) => {
+const Control = ({ controlType, text }) => {
   const classes = useStyles();
 
   return (
@@ -21,14 +21,18 @@ const Control = ({controlType, text}) => {
       className={classes.button}
       onClick={controlType}
     >
-        {text} Control
+      {`${text} Control`}
     </Button>
-  )
-}
+  );
+};
 
 Control.propTypes = {
-  controlType: PropTypes.func,
+  controlType: PropTypes.func.isRequired,
   text: PropTypes.string,
-}
+};
+
+Control.defaultProps = {
+  text: 'Some',
+};
 
 export default Control;

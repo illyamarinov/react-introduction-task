@@ -7,6 +7,6 @@ const RESOURCES = {
   PHOTOS: 'photos',
   TODOS: 'todos',
   USERS: 'users',
-}
+};
 
 export { RESOURCES, API_URL };
