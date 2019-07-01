@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
+
 import List from 'components/list';
 import Control from 'components/control';
 
@@ -22,15 +23,16 @@ class App extends Component {
 
   componentDidMount() {
     getData(RESOURCES.PHOTOS).then((response) => {
-      response.forEach((item) => {
+      const listData = response.map((item) => {
         item.selected = false;
         item.favorite = false;
+        return item;
       });
 
       this.isCompleted = true;
 
       this.setState({
-        list: response,
+        list: listData,
       });
     });
 
@@ -48,7 +50,7 @@ class App extends Component {
   }
 
   resetAll = () => {
-    const chunks = this.state.chunks.slice();
+    const { chunks } = this.state;
 
     chunks.forEach((item) => {
       item.selected = false;
@@ -63,7 +65,7 @@ class App extends Component {
   }
 
   unselectAll = () => {
-    const chunks = this.state.chunks.slice();
+    const { chunks } = this.state;
 
     chunks.forEach((item) => {
       item.selected = false;
@@ -75,7 +77,7 @@ class App extends Component {
   }
 
   setSelectedFavorite = () => {
-    const chunks = this.state.chunks.slice();
+    const { chunks } = this.state;
 
     chunks.forEach((item) => {
       if (item.selected) {
@@ -90,7 +92,7 @@ class App extends Component {
   }
 
   unsetSelectedFavorite = () => {
-    const chunks = this.state.chunks.slice();
+    const { chunks } = this.state;
 
     chunks.forEach((item) => {
       if (item.selected && item.favorite) {
@@ -105,7 +107,7 @@ class App extends Component {
   }
 
   setFavorite = (item) => {
-    const chunks = this.state.chunks.slice();
+    const { chunks } = this.state;
 
     if (chunks[item].favorite) {
       chunks[item].favorite = false;
@@ -120,7 +122,7 @@ class App extends Component {
   }
 
   selectItem = (item) => {
-    const chunks = this.state.chunks.slice();
+    const { chunks } = this.state;
 
     chunks[item].selected = !chunks[item].selected;
     this.setState({
@@ -141,8 +143,10 @@ class App extends Component {
   };
 
   render() {
+    const { chunks } = this.state;
+
     return (
-      <div className="app">
+      <div className="app" onScroll={this.handleScroll}>
 
         <header className="app-header">
           <h1 className="app-header__title">React Introduction Task</h1>
@@ -172,7 +176,7 @@ class App extends Component {
           <div className="app-content">
 
             <List
-              listItems={this.state.chunks}
+              listItems={chunks}
               selectItem={this.selectItem}
               setFavorite={this.setFavorite}
             />
