@@ -8,7 +8,7 @@ import './index.scss';
 
 const List = ({ listItems, setFavorite, selectItem }) => (
   <ul className="list">
-    <FlipMove>
+    <FlipMove duration="1000">
       {listItems.map((item, index) => (
         <ListItem
           key={item.id}

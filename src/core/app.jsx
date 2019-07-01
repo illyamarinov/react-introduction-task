@@ -19,6 +19,7 @@ class App extends Component {
     };
     this.itemCounter = 20;
     this.isCompleted = false;
+    this.listRef = React.createRef();
   }
 
   componentDidMount() {
@@ -37,6 +38,14 @@ class App extends Component {
     });
 
     document.addEventListener('keydown', this.onEscapePressed);
+  }
+
+  componentWillUpdate() {
+    this.scrollPosition = window.pageYOffset;
+  }
+
+  componentDidUpdate() {
+    window.scrollTo(0, this.scrollPosition);
   }
 
   componentWillUnmount() {
@@ -146,7 +155,9 @@ class App extends Component {
     const { chunks } = this.state;
 
     return (
-      <div className="app" onScroll={this.handleScroll}>
+      <div
+        className="app"
+      >
 
         <header className="app-header">
           <h1 className="app-header__title">React Introduction Task</h1>
