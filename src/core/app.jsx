@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 
-import List from 'components/list';
-import Control from 'components/control';
+import ListItem from 'components/list-item';
+import Header from 'components/header';
 
 import getData from 'services/get-data';
 import sortChunks from 'utils/sort-chunks';
@@ -40,13 +40,13 @@ class App extends Component {
     document.addEventListener('keydown', this.onEscapePressed);
   }
 
-  componentWillUpdate() {
-    this.scrollPosition = window.pageYOffset;
-  }
-
-  componentDidUpdate() {
-    window.scrollTo(0, this.scrollPosition);
-  }
+  // componentWillUpdate() {
+  //   this.scrollPosition = window.pageYOffset;
+  // }
+  //
+  // componentDidUpdate() {
+  //   window.scrollTo(0, this.scrollPosition);
+  // }
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.onEscapePressed);
@@ -158,24 +158,11 @@ class App extends Component {
       <div
         className="app"
       >
-
-        <header className="app-header">
-          <h1 className="app-header__title">React Introduction Task</h1>
-          <div className="app-navbar">
-            <Control
-              text="Favorite"
-              controlType={this.setSelectedFavorite}
-            />
-            <Control
-              text="Unfavorite"
-              controlType={this.unsetSelectedFavorite}
-            />
-            <Control
-              text="Reset"
-              controlType={this.resetAll}
-            />
-          </div>
-        </header>
+        <Header
+          setSelectedFavorite={this.setSelectedFavorite}
+          unsetSelectedFavorite={this.unsetSelectedFavorite}
+          resetAll={this.resetAll}
+        />
 
         <InfiniteScroll
           pageStart={0}
@@ -186,7 +173,7 @@ class App extends Component {
         >
           <div className="app-content">
 
-            <List
+            <ListItem
               listItems={chunks}
               selectItem={this.selectItem}
               setFavorite={this.setFavorite}

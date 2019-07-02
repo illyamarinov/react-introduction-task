@@ -1,28 +1,27 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import FlipMove from 'react-flip-move';
 import classNames from 'classnames';
 
 import Icon from '@material-ui/core/Icon';
 
 import './index.scss';
 
-class ListItem extends Component {
-  handleFavorite = (e) => {
-    const { setFavorite, index } = this.props;
-    e.stopPropagation();
-    e.preventDefault();
-    setFavorite(index);
-  };
-
-  handleSelect = () => {
-    const { selectItem, index } = this.props;
-    selectItem(index);
-  };
-
-  render() {
+function ListItem({ listItems, setFavorite, selectItem }) {
+  const showItems = () => listItems.map((item, index) => {
     const {
       title, id, selected, favorite,
-    } = this.props;
+    } = item;
+
+    const handleFavorite = (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      setFavorite(index);
+    };
+
+    const handleSelect = () => {
+      selectItem(index);
+    };
 
     const liClass = classNames(
       'list__item',
@@ -30,20 +29,21 @@ class ListItem extends Component {
     );
 
     return (
-      <li
-        onClick={this.handleSelect}
+      <div
+        onClick={handleSelect}
         className={liClass}
+        key={id}
       >
         <label
           className="list__item-label"
           htmlFor={`input-${id}`}
-          onClick={this.handleFavorite}
+          onClick={handleFavorite}
         >
           {
-        favorite
-          ? <Icon className="list__item-icon_full">star</Icon>
-          : <Icon className="list__item-icon_outline">star_border</Icon>
-      }
+            favorite
+              ? <Icon className="list__item-icon_full">star</Icon>
+              : <Icon className="list__item-icon_outline">star_border</Icon>
+          }
           <input
             className="list__item-button"
             id={`input-${id}`}
@@ -55,25 +55,24 @@ class ListItem extends Component {
         <p className="list__item-content">
           {`${id}. ${title}`}
         </p>
-      </li>
+      </div>
     );
-  }
+  });
+  return (
+    <FlipMove
+      typeName="div"
+      className="list"
+      duration="1000"
+    >
+      {showItems()}
+    </FlipMove>
+  );
 }
 
 ListItem.propTypes = {
-  title: PropTypes.string,
-  id: PropTypes.number.isRequired,
-  index: PropTypes.number.isRequired,
-  favorite: PropTypes.bool,
-  selected: PropTypes.bool,
+  listItems: PropTypes.arrayOf(PropTypes.object).isRequired,
   setFavorite: PropTypes.func.isRequired,
   selectItem: PropTypes.func.isRequired,
-};
-
-ListItem.defaultProps = {
-  title: 'Title',
-  favorite: false,
-  selected: false,
 };
 
 export default ListItem;
