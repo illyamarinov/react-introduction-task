@@ -32,7 +32,7 @@ Control.propTypes = {
 };
 
 Control.defaultProps = {
-  text: 'Some',
+  text: 'Default',
 };
 
 export default Control;

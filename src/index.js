@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
-import App from 'core/app';
+import App from 'containers/app';
 
 const ROOT = document.getElementById('root');
 

@@ -9,4 +9,8 @@ const RESOURCES = {
   USERS: 'users',
 };
 
-export { RESOURCES, API_URL };
+const BUTTONS_CODE = {
+  ESCAPE: 27,
+};
+
+export { RESOURCES, API_URL, BUTTONS_CODE };

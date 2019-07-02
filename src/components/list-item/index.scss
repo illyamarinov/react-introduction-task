@@ -1,35 +1,31 @@
-.list {
-  padding: 0 40px;
+.list__item {
+  display: flex;
+  justify-content: flex-start;
+  padding: 10px;
+  background: #d6d6d6;
+  margin: 20px 0;
+  cursor: pointer;
 
-  &__item {
-    display: flex;
-    justify-content: flex-start;
-    padding: 10px;
-    background: #d6d6d6;
-    margin: 20px 0;
+  &-label {
     cursor: pointer;
+    padding: 1rem;
 
-    &-label {
-      cursor: pointer;
-      padding: 1rem;
-
-      &:hover {
-        .list__item-icon_outline {
-          color: white;
-        }
+    &:hover {
+      .list__item-icon_outline {
+        color: white;
       }
     }
+  }
 
-    &-button {
-      display: none;
-    }
+  &-button {
+    display: none;
+  }
 
-    &-icon_full {
-      color: white;
-    }
+  &-icon_full {
+    color: white;
+  }
 
-    &_selected {
-      background: #a7a7a7;
-    }
+  &_selected {
+    background: #a7a7a7;
   }
 }
