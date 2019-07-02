@@ -22,6 +22,7 @@ class List extends Component {
   }
 
   componentDidMount() {
+    console.log('componentDidMount');
     const { changeState } = this.props;
 
     getData(RESOURCES.PHOTOS).then((response) => {
@@ -43,9 +44,10 @@ class List extends Component {
   //   this.scrollPosition = window.pageYOffset;
   // }
   //
-  // componentDidUpdate() {
-  //   window.scrollTo(0, this.scrollPosition);
-  // }
+  componentDidUpdate() {
+    console.log('componentDidUpdate');
+    // window.scrollTo(0, this.scrollPosition);
+  }
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.onEscapePressed);
@@ -89,9 +91,24 @@ class List extends Component {
     }
   };
 
-  render() {
+  renderListItems = () => {
     const { chunks } = this.props;
 
+    return chunks.map((item, index) => (
+      <div key={item.id}>
+        <ListItem
+          listItems={chunks}
+          key={item.id}
+          index={index}
+          setFavorite={this.setFavorite}
+          selectItem={this.selectItem}
+          {...item}
+        />
+      </div>
+    ));
+  }
+
+  render() {
     return (
       <InfiniteScroll
         pageStart={0}
@@ -100,20 +117,13 @@ class List extends Component {
         hasMore
         loader={<div className="loader" key={0}>Loading ...</div>}
       >
-        <ul className="list">
-          <FlipMove duration="1000">
-            {chunks.map((item, index) => (
-              <ListItem
-                listItems={chunks}
-                key={item.id}
-                index={index}
-                setFavorite={this.setFavorite}
-                selectItem={this.selectItem}
-                {...item}
-              />
-            ))}
-          </FlipMove>
-        </ul>
+        <FlipMove
+          duration="1000"
+          typeName="div"
+          className="list"
+        >
+          {this.renderListItems()}
+        </FlipMove>
       </InfiniteScroll>
     );
   }

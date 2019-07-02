@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
@@ -6,59 +6,53 @@ import Icon from '@material-ui/core/Icon';
 
 import './index.scss';
 
-class ListItem extends Component {
-  handleFavorite = (e) => {
-    const { setFavorite, index } = this.props;
+const ListItem = ({
+  title, id, index, selected, favorite, setFavorite, selectItem,
+}) => {
+  const handleFavorite = (e) => {
     e.stopPropagation();
     e.preventDefault();
     setFavorite(index);
   };
 
-  handleSelect = () => {
-    const { selectItem, index } = this.props;
+  const handleSelect = () => {
     selectItem(index);
   };
 
-  render() {
-    const {
-      title, id, selected, favorite,
-    } = this.props;
+  const liClass = classNames(
+    'list__item',
+    { list__item_selected: selected },
+  );
 
-    const liClass = classNames(
-      'list__item',
-      { list__item_selected: selected },
-    );
-
-    return (
-      <div
-        onClick={this.handleSelect}
-        className={liClass}
+  return (
+    <div
+      onClick={handleSelect}
+      className={liClass}
+    >
+      <label
+        className="list__item-label"
+        htmlFor={`input-${id}`}
+        onClick={handleFavorite}
       >
-        <label
-          className="list__item-label"
-          htmlFor={`input-${id}`}
-          onClick={this.handleFavorite}
-        >
-          {
-        favorite
-          ? <Icon className="list__item-icon_full">star</Icon>
-          : <Icon className="list__item-icon_outline">star_border</Icon>
-      }
-          <input
-            className="list__item-button"
-            id={`input-${id}`}
-            type="checkbox"
-            defaultChecked={false}
-          />
-        </label>
+        {
+      favorite
+        ? <Icon className="list__item-icon_full">star</Icon>
+        : <Icon className="list__item-icon_outline">star_border</Icon>
+    }
+        <input
+          className="list__item-button"
+          id={`input-${id}`}
+          type="checkbox"
+          defaultChecked={false}
+        />
+      </label>
 
-        <p className="list__item-content">
-          {`${id}. ${title}`}
-        </p>
-      </div>
-    );
-  }
-}
+      <p className="list__item-content">
+        {`${id}. ${title}`}
+      </p>
+    </div>
+  );
+};
 
 ListItem.propTypes = {
   title: PropTypes.string,
