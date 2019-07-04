@@ -109,6 +109,7 @@ class List extends Component {
   }
 
   render() {
+
     return (
       <InfiniteScroll
         pageStart={0}
@@ -118,7 +119,8 @@ class List extends Component {
         loader={<div className="loader" key={0}>Loading ...</div>}
       >
         <FlipMove
-          duration="1000"
+          staggerDurationBy={150}
+          duration="500"
           typeName="div"
           className="list"
         >
