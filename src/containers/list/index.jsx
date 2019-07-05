@@ -19,6 +19,7 @@ class List extends Component {
     super(props);
     this.itemCounter = 20;
     this.isCompleted = false;
+    this.hasMoreFlag = true;
   }
 
   componentDidMount() {
@@ -89,6 +90,10 @@ class List extends Component {
         changeState('chunks', chunks.concat(list.slice(chunks.length, chunks.length + this.itemCounter)));
       }, 1500);
     }
+
+    if (list.length !== 0 && list.length === chunks.length) {
+      this.hasMoreFlag = false;
+    }
   };
 
   renderListItems = () => {
@@ -109,13 +114,12 @@ class List extends Component {
   }
 
   render() {
-
     return (
       <InfiniteScroll
         pageStart={0}
         loadMore={this.getMoreData}
         threshold={10}
-        hasMore
+        hasMore={this.hasMoreFlag}
         loader={<div className="loader" key={0}>Loading ...</div>}
       >
         <FlipMove
