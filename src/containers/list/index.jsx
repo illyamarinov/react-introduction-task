@@ -11,6 +11,7 @@ import sortChunks from 'utils/sort-chunks';
 import unselectAll from 'utils/unselect-all';
 
 import { RESOURCES, BUTTONS_CODE } from 'constants/settings';
+import EVENTS from 'constants/events';
 
 import './index.scss';
 
@@ -38,7 +39,7 @@ class List extends Component {
       changeState('list', listData);
     });
 
-    document.addEventListener('keydown', this.onEscapePressed);
+    document.addEventListener(EVENTS.KEY_DOWN, this.onEscapePressed);
   }
 
   // componentWillUpdate() {
@@ -51,7 +52,7 @@ class List extends Component {
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.onEscapePressed);
+    document.removeEventListener(EVENTS.KEY_DOWN, this.onEscapePressed);
   }
 
   onEscapePressed = ({ keyCode }) => {
