@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import FlipMove from 'react-flip-move';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -15,131 +15,141 @@ import EVENTS from 'constants/events';
 
 import './index.scss';
 
-class List extends Component {
-  constructor(props) {
-    super(props);
-    this.itemCounter = 20;
-    this.isCompleted = false;
-    this.hasMoreFlag = true;
-  }
+const List = ({
+  onListChange, onChunksChange, list, chunks,
+}) => {
+  const [isCompleted, setIsCompleted] = useState(false);
 
-  componentDidMount() {
-    console.log('componentDidMount');
-    const { changeState } = this.props;
+  const itemCounter = 20;
+  let hasMoreFlag = true;
 
-    getData(RESOURCES.PHOTOS).then((response) => {
-      const listData = response.map((item) => {
-        item.selected = false;
-        item.favorite = false;
-        return item;
+  useEffect(() => {
+    if (!isCompleted) {
+      getData(RESOURCES.PHOTOS).then((response) => {
+        const listData = response.map((listItem) => {
+          listItem.selected = false;
+          listItem.favorite = false;
+          return listItem;
+        });
+
+        setIsCompleted(true);
+        onListChange(listData);
       });
+    }
+  }, [isCompleted, onListChange]);
 
-      this.isCompleted = true;
+  useEffect(() => {
+    const onEscapePressed = ({ keyCode }) => {
+      if (keyCode === BUTTONS_CODE.ESCAPE) {
+        const chunksCopy = chunks.slice();
+        unselectAll(chunksCopy, onChunksChange);
+      }
+    };
 
-      changeState('list', listData);
-    });
+    document.addEventListener(EVENTS.KEY_DOWN, onEscapePressed);
 
-    document.addEventListener(EVENTS.KEY_DOWN, this.onEscapePressed);
-  }
+    return () => {
+      document.removeEventListener(EVENTS.KEY_DOWN, onEscapePressed);
+    };
+  }, [chunks, onChunksChange]);
+
+  // componentDidMount() {
+  //   console.log('componentDidMount');
+  //   const { changeState } = this.props;
+  //   document.addEventListener(EVENTS.KEY_DOWN, this.onEscapePressed);
+  // }
 
   // componentWillUpdate() {
   //   this.scrollPosition = window.pageYOffset;
   // }
   //
-  componentDidUpdate() {
-    console.log('componentDidUpdate');
-    // window.scrollTo(0, this.scrollPosition);
-  }
+  // componentDidUpdate() {
+  //   console.log('componentDidUpdate');
+  //   // window.scrollTo(0, this.scrollPosition);
+  // }
 
-  componentWillUnmount() {
-    document.removeEventListener(EVENTS.KEY_DOWN, this.onEscapePressed);
-  }
+  // componentWillUnmount() {
+  //   document.removeEventListener(EVENTS.KEY_DOWN, this.onEscapePressed);
+  // }
 
-  onEscapePressed = ({ keyCode }) => {
-    const { chunks, changeState } = this.props;
+  const setFavorite = (listItem) => {
+    const chunksCopy = chunks.slice();
 
-    if (keyCode === BUTTONS_CODE.ESCAPE) {
-      unselectAll(chunks, changeState);
-    }
-  }
-
-  setFavorite = (item) => {
-    const { chunks, changeState } = this.props;
-
-    if (chunks[item].favorite) {
-      chunks[item].favorite = false;
+    if (chunksCopy[listItem].favorite) {
+      chunksCopy[listItem].favorite = false;
     } else {
-      chunks[item].favorite = true;
+      chunksCopy[listItem].favorite = true;
     }
 
-    sortChunks(chunks);
-    changeState('chunks', chunks);
-  }
+    sortChunks(chunksCopy);
+    onChunksChange(chunksCopy);
+  };
 
-  selectItem = (item) => {
-    const { chunks, changeState } = this.props;
+  const selectItem = (listItem) => {
+    const chunksCopy = chunks.slice();
 
-    chunks[item].selected = !chunks[item].selected;
-    changeState('chunks', chunks);
-  }
+    chunksCopy[listItem].selected = !chunksCopy[listItem].selected;
+    onChunksChange(chunksCopy);
+  };
 
-  getMoreData = () => {
-    const { list, chunks, changeState } = this.props;
-
-    if (this.isCompleted) {
+  const getMoreData = () => {
+    const chunksCopy = chunks.slice();
+    const listCopy = list.slice();
+    if (isCompleted) {
       setTimeout(() => {
-        changeState('chunks', chunks.concat(list.slice(chunks.length, chunks.length + this.itemCounter)));
+        onChunksChange(
+          chunksCopy.concat(
+            listCopy.slice(
+              chunksCopy.length, chunksCopy.length + itemCounter,
+            ),
+          ),
+        );
       }, 1500);
     }
 
-    if (list.length !== 0 && list.length === chunks.length) {
-      this.hasMoreFlag = false;
+    if (listCopy.length !== 0 && listCopy.length === chunksCopy.length) {
+      hasMoreFlag = false;
     }
   };
 
-  renderListItems = () => {
-    const { chunks } = this.props;
+  const renderListItems = () => chunks.map((listItem, index) => (
+    <div key={listItem.id}>
+      <ListItem
+        listItems={chunks}
+        key={listItem.id}
+        index={index}
+        setFavorite={setFavorite}
+        selectItem={selectItem}
+        {...listItem}
+      />
+    </div>
+  ));
 
-    return chunks.map((item, index) => (
-      <div key={item.id}>
-        <ListItem
-          listItems={chunks}
-          key={item.id}
-          index={index}
-          setFavorite={this.setFavorite}
-          selectItem={this.selectItem}
-          {...item}
-        />
-      </div>
-    ));
-  }
-
-  render() {
-    return (
-      <InfiniteScroll
-        pageStart={0}
-        loadMore={this.getMoreData}
-        threshold={10}
-        hasMore={this.hasMoreFlag}
-        loader={<div className="loader" key={0}>Loading ...</div>}
+  return (
+    <InfiniteScroll
+      pageStart={0}
+      loadMore={getMoreData}
+      threshold={10}
+      hasMore={hasMoreFlag}
+      loader={<div className="loader" key={0}>Loading ...</div>}
+    >
+      <FlipMove
+        staggerDurationBy={50}
+        duration="500"
+        typeName="div"
+        className="list"
       >
-        <FlipMove
-          staggerDurationBy={150}
-          duration="500"
-          typeName="div"
-          className="list"
-        >
-          {this.renderListItems()}
-        </FlipMove>
-      </InfiniteScroll>
-    );
-  }
-}
+        {renderListItems()}
+      </FlipMove>
+    </InfiniteScroll>
+  );
+};
 
 List.propTypes = {
   chunks: PropTypes.arrayOf(PropTypes.object).isRequired,
   list: PropTypes.arrayOf(PropTypes.object).isRequired,
-  changeState: PropTypes.func.isRequired,
+  onChunksChange: PropTypes.func.isRequired,
+  onListChange: PropTypes.func.isRequired,
 };
 
 export default List;

@@ -10,17 +10,20 @@ import setSelectedFavorite from 'utils/set-selected-favorite';
 
 import './index.scss';
 
-const Header = ({ chunks, changeState }) => {
+const Header = ({ chunks, onChunksChange }) => {
   const handleSetSelectedFavorite = () => {
-    setSelectedFavorite(chunks, sortChunks, changeState);
+    const chunksCopy = chunks.slice();
+    setSelectedFavorite(chunksCopy, sortChunks, onChunksChange);
   };
 
   const handleUnsetSelectedFavorite = () => {
-    unsetSelectedFavorite(chunks, sortChunks, changeState);
+    const chunksCopy = chunks.slice();
+    unsetSelectedFavorite(chunksCopy, sortChunks, onChunksChange);
   };
 
   const handleReset = () => {
-    resetAll(chunks, changeState);
+    const chunksCopy = chunks.slice();
+    resetAll(chunksCopy, onChunksChange);
   };
 
   return (
@@ -46,7 +49,7 @@ const Header = ({ chunks, changeState }) => {
 
 Header.propTypes = {
   chunks: PropTypes.arrayOf(PropTypes.object).isRequired,
-  changeState: PropTypes.func.isRequired,
+  onChunksChange: PropTypes.func.isRequired,
 };
 
 

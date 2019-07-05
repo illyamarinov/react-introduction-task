@@ -1,9 +1,8 @@
-const unselectAll = (items, changeState) => {
+const unselectAll = (items, onChunksChange) => {
   items.forEach((item) => {
     item.selected = false;
   });
-
-  changeState('chunks', items);
+  onChunksChange(items);
 };
 
 export default unselectAll;
