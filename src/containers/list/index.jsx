@@ -53,25 +53,6 @@ const List = ({
     };
   }, [chunks, onChunksChange]);
 
-  // componentDidMount() {
-  //   console.log('componentDidMount');
-  //   const { changeState } = this.props;
-  //   document.addEventListener(EVENTS.KEY_DOWN, this.onEscapePressed);
-  // }
-
-  // componentWillUpdate() {
-  //   this.scrollPosition = window.pageYOffset;
-  // }
-  //
-  // componentDidUpdate() {
-  //   console.log('componentDidUpdate');
-  //   // window.scrollTo(0, this.scrollPosition);
-  // }
-
-  // componentWillUnmount() {
-  //   document.removeEventListener(EVENTS.KEY_DOWN, this.onEscapePressed);
-  // }
-
   const setFavorite = (listItem) => {
     const chunksCopy = chunks.slice();
 
