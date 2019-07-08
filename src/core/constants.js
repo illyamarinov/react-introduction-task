@@ -13,4 +13,10 @@ const BUTTONS_CODE = {
   ESCAPE: 27,
 };
 
-export { RESOURCES, API_URL, BUTTONS_CODE };
+const EVENTS = {
+  KEY_DOWN: 'keydown',
+};
+
+export {
+  RESOURCES, API_URL, BUTTONS_CODE, EVENTS,
+};

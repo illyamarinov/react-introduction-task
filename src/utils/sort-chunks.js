@@ -1,8 +1,18 @@
 const sortChunks = (items) => {
-  items.sort((first, second) => (
-    (first.favorite === second.favorite)
-      ? 0
-      : first.favorite ? -1 : 1));
+  const sorted = items.slice();
+  sorted.sort((first, second) => {
+    if (first.isFavorite === second.isFavorite) {
+      return 0;
+    }
+
+    if (first.isFavorite) {
+      return -1;
+    }
+
+    return 1;
+  });
+
+  return sorted;
 };
 
 export default sortChunks;

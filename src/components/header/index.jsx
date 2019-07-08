@@ -4,26 +4,22 @@ import PropTypes from 'prop-types';
 import Control from 'components/control';
 
 import resetAll from 'utils/reset-all';
-import sortChunks from 'utils/sort-chunks';
-import unsetSelectedFavorite from 'utils/unset-selected-favorite';
 import setSelectedFavorite from 'utils/set-selected-favorite';
+import unsetSelectedFavorite from 'utils/unset-selected-favorite';
 
 import './index.scss';
 
 const Header = ({ chunks, onChunksChange }) => {
   const handleSetSelectedFavorite = () => {
-    const chunksCopy = chunks.slice();
-    setSelectedFavorite(chunksCopy, sortChunks, onChunksChange);
+    setSelectedFavorite(chunks, onChunksChange);
   };
 
   const handleUnsetSelectedFavorite = () => {
-    const chunksCopy = chunks.slice();
-    unsetSelectedFavorite(chunksCopy, sortChunks, onChunksChange);
+    unsetSelectedFavorite(chunks, onChunksChange);
   };
 
   const handleReset = () => {
-    const chunksCopy = chunks.slice();
-    resetAll(chunksCopy, onChunksChange);
+    resetAll(chunks, onChunksChange);
   };
 
   return (
@@ -51,6 +47,5 @@ Header.propTypes = {
   chunks: PropTypes.arrayOf(PropTypes.object).isRequired,
   onChunksChange: PropTypes.func.isRequired,
 };
-
 
 export default Header;

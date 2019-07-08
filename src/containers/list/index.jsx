@@ -10,8 +10,7 @@ import getData from 'services/get-data';
 import sortChunks from 'utils/sort-chunks';
 import unselectAll from 'utils/unselect-all';
 
-import { RESOURCES, BUTTONS_CODE } from 'constants/settings';
-import EVENTS from 'constants/events';
+import { RESOURCES, BUTTONS_CODE, EVENTS } from 'core/constants';
 
 import './index.scss';
 
@@ -24,87 +23,59 @@ const List = ({
   let hasMoreFlag = true;
 
   useEffect(() => {
-    if (!isCompleted) {
-      getData(RESOURCES.PHOTOS).then((response) => {
-        const listData = response.map((listItem) => {
-          listItem.selected = false;
-          listItem.favorite = false;
-          return listItem;
-        });
-
-        setIsCompleted(true);
-        onListChange(listData);
+    getData(RESOURCES.PHOTOS).then((response) => {
+      const listData = response.map((listItem) => {
+        listItem.isSelected = false;
+        listItem.isFavorite = false;
+        return listItem;
       });
+
+      setIsCompleted(true);
+      onListChange(listData);
+    });
+  }, []);
+
+  const onEscapePressed = ({ keyCode }) => {
+    if (keyCode === BUTTONS_CODE.ESCAPE) {
+      unselectAll(chunks, onChunksChange);
     }
-  }, [isCompleted, onListChange]);
+  };
 
   useEffect(() => {
-    const onEscapePressed = ({ keyCode }) => {
-      if (keyCode === BUTTONS_CODE.ESCAPE) {
-        const chunksCopy = chunks.slice();
-        unselectAll(chunksCopy, onChunksChange);
-      }
-    };
-
     document.addEventListener(EVENTS.KEY_DOWN, onEscapePressed);
-
     return () => {
       document.removeEventListener(EVENTS.KEY_DOWN, onEscapePressed);
     };
-  }, [chunks, onChunksChange]);
+  }, [chunks]);
 
-  const setFavorite = (listItem) => {
-    const chunksCopy = chunks.slice();
-
-    if (chunksCopy[listItem].favorite) {
-      chunksCopy[listItem].favorite = false;
-    } else {
-      chunksCopy[listItem].favorite = true;
-    }
-
-    sortChunks(chunksCopy);
-    onChunksChange(chunksCopy);
+  const toggleFavorite = (index) => {
+    chunks[index].isFavorite = !chunks[index].isFavorite;
+    onChunksChange(sortChunks(chunks));
   };
 
-  const selectItem = (listItem) => {
+  const selectItem = (index) => {
     const chunksCopy = chunks.slice();
-
-    chunksCopy[listItem].selected = !chunksCopy[listItem].selected;
+    chunksCopy[index].isSelected = !chunksCopy[index].isSelected;
     onChunksChange(chunksCopy);
   };
 
   const getMoreData = () => {
-    const chunksCopy = chunks.slice();
-    const listCopy = list.slice();
     if (isCompleted) {
       setTimeout(() => {
         onChunksChange(
-          chunksCopy.concat(
-            listCopy.slice(
-              chunksCopy.length, chunksCopy.length + itemCounter,
+          chunks.concat(
+            list.slice(
+              chunks.length, chunks.length + itemCounter,
             ),
           ),
         );
       }, 1500);
     }
 
-    if (listCopy.length !== 0 && listCopy.length === chunksCopy.length) {
+    if (list.length !== 0 && list.length === chunks.length) {
       hasMoreFlag = false;
     }
   };
-
-  const renderListItems = () => chunks.map((listItem, index) => (
-    <div key={listItem.id}>
-      <ListItem
-        listItems={chunks}
-        key={listItem.id}
-        index={index}
-        setFavorite={setFavorite}
-        selectItem={selectItem}
-        {...listItem}
-      />
-    </div>
-  ));
 
   return (
     <InfiniteScroll
@@ -120,7 +91,20 @@ const List = ({
         typeName="div"
         className="list"
       >
-        {renderListItems()}
+        {
+          chunks.map((listItem, index) => (
+            <div key={listItem.id}>
+              <ListItem
+                listItems={chunks}
+                key={listItem.id}
+                index={index}
+                toggleFavorite={toggleFavorite}
+                selectItem={selectItem}
+                {...listItem}
+              />
+            </div>
+          ))
+        }
       </FlipMove>
     </InfiniteScroll>
   );

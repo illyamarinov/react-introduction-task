@@ -1,11 +1,12 @@
 const resetAll = (items, onChunksChange) => {
-  items.forEach((item) => {
-    item.selected = false;
-    item.favorite = false;
+  const tempItems = items.map((item) => {
+    item.isSelected = false;
+    item.isFavorite = false;
+    return item;
   });
 
-  items.sort((first, second) => first.id - second.id);
-  onChunksChange(items);
+  tempItems.sort((first, second) => first.id - second.id);
+  onChunksChange(tempItems);
 };
 
 export default resetAll;

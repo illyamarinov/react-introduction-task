@@ -7,12 +7,12 @@ import Icon from '@material-ui/core/Icon';
 import './index.scss';
 
 const ListItem = ({
-  title, id, index, selected, favorite, setFavorite, selectItem,
+  title, id, index, isSelected, isFavorite, toggleFavorite, selectItem,
 }) => {
   const handleFavorite = (e) => {
     e.stopPropagation();
     e.preventDefault();
-    setFavorite(index);
+    toggleFavorite(index);
   };
 
   const handleSelect = () => {
@@ -21,7 +21,7 @@ const ListItem = ({
 
   const liClass = classNames(
     'list__item',
-    { list__item_selected: selected },
+    { list__item_selected: isSelected },
   );
 
   return (
@@ -35,7 +35,7 @@ const ListItem = ({
         onClick={handleFavorite}
       >
         {
-      favorite
+      isFavorite
         ? <Icon className="list__item-icon_full">star</Icon>
         : <Icon className="list__item-icon_outline">star_border</Icon>
     }
@@ -58,16 +58,16 @@ ListItem.propTypes = {
   title: PropTypes.string,
   id: PropTypes.number.isRequired,
   index: PropTypes.number.isRequired,
-  favorite: PropTypes.bool,
-  selected: PropTypes.bool,
-  setFavorite: PropTypes.func.isRequired,
+  isFavorite: PropTypes.bool,
+  isSelected: PropTypes.bool,
+  toggleFavorite: PropTypes.func.isRequired,
   selectItem: PropTypes.func.isRequired,
 };
 
 ListItem.defaultProps = {
   title: 'Title',
-  favorite: false,
-  selected: false,
+  isFavorite: false,
+  isSelected: false,
 };
 
 export default ListItem;

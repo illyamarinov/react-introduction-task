@@ -1,11 +1,13 @@
-const unsetSelectedFavorite = (items, sortChunks, onChunksChange) => {
-  items.forEach((item) => {
-    if (item.selected && item.favorite) {
-      item.favorite = false;
+import sortChunks from 'utils/sort-chunks';
+
+const unsetSelectedFavorite = (items, onChunksChange) => {
+  const tempItems = items.map((item) => {
+    if (item.isSelected && item.isFavorite) {
+      item.isFavorite = false;
     }
+    return item;
   });
-  sortChunks(items);
-  onChunksChange(items);
+  onChunksChange(sortChunks(tempItems));
 };
 
 export default unsetSelectedFavorite;

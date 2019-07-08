@@ -1,8 +1,8 @@
 const unselectAll = (items, onChunksChange) => {
-  items.forEach((item) => {
-    item.selected = false;
-  });
-  onChunksChange(items);
+  onChunksChange(items.map((item) => {
+    item.isSelected = false;
+    return item;
+  }));
 };
 
 export default unselectAll;
